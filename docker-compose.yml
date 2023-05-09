@@ -1,0 +1,17 @@
+version: '3.9'
+
+services: 
+  diary_database:
+    image: postgres:15.2
+    container_name: diary_database
+    restart: always
+    environment: 
+      POSTGRES_DB: diarybdMariachi
+      POSTGRES_USER: Mariachibd
+      POSTGRES_PASSWORD: Mariachibd2023
+    env_file: .env
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+  
