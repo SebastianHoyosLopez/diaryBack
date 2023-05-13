@@ -5,12 +5,14 @@ import { FindOneOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
+import { ResponsibleOfService } from 'src/users/services/responsible-of.service';
 
 @Injectable()
 export class SerenatasService {
   constructor(
     @InjectRepository(SerenataEntity)
     private readonly serenataRepo: Repository<SerenataEntity>,
+    private readonly responsibleOfService: ResponsibleOfService,
   ) {}
 
   async findAll(): Promise<SerenataEntity[]> {
@@ -20,6 +22,7 @@ export class SerenatasService {
 
     return await this.serenataRepo
       .createQueryBuilder('serenata')
+      .leftJoinAndSelect('serenata.responsibleOf', 'responsibleOf')
       .where({
         date: MoreThan(yesterday.toISOString()),
       })
@@ -35,12 +38,13 @@ export class SerenatasService {
 
     return await this.serenataRepo
       .createQueryBuilder('serenatas')
+      .leftJoinAndSelect('serenatas.responsibleOf', 'responsibleOf')
       .where({
-        date: LessThanOrEqual(yesterday.toISOString())
+        date: LessThanOrEqual(yesterday.toISOString()),
       })
       .orderBy('date', 'DESC')
       .addOrderBy('hour', 'DESC')
-      .getMany()
+      .getMany();
   }
 
   async findOne(
@@ -89,10 +93,12 @@ export class SerenatasService {
       ...data,
     });
 
-    // if(data.customerId) {
-    //   const customer = await this.customersService.findOne(data.customerId)
-    //   newSerenata.customer = customer
-    // }
+    if (data.responsibleOfId) {
+      const responsibleOf = await this.responsibleOfService.findOne(
+        data.responsibleOfId,
+      );
+      newSerenata.responsibleOf = responsibleOf;
+    }
 
     await this.serenataRepo.save(newSerenata);
     return newSerenata;
@@ -100,12 +106,14 @@ export class SerenatasService {
 
   async update(id: string, changes: UpdateSerenataDto) {
     const serenata = await this.serenataRepo.findOne({ where: { id: id } });
-    
-    // if(changes.customerId) {
-    //   const customer = await this.customersService.findOne(changes.customerId)
-    //   serenata.customer = customer
-    // }
-    
+
+    if (changes.responsibleOfId) {
+      const responsibleOf = await this.responsibleOfService.findOne(
+        changes.responsibleOfId,
+      );
+      serenata.responsibleOf = responsibleOf;
+    }
+
     this.serenataRepo.merge(serenata, changes);
     return this.serenataRepo.save(serenata);
   }

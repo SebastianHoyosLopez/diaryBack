@@ -6,10 +6,14 @@ import { UserEntity } from './entities/user.entity';
 import { ResponsibleOfController } from './controllers/responsible-of.controller';
 import { ResponsibleOfService } from './services/responsible-of.service';
 import { ResponsibleOfEntity } from './entities/responsibleOf.entity';
+import { SerenatasModule } from 'src/serenatas/serenatas.module';
+import { SerenatasController } from 'src/serenatas/controllers/serenatas.controller';
+import { SerenatasService } from 'src/serenatas/services/serenatas.service';
+import { SerenataEntity } from 'src/serenatas/entities/serenata.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserEntity, ResponsibleOfEntity])],
-  controllers: [UsersController, ResponsibleOfController],
-  providers: [UsersService, ResponsibleOfService]
+  imports: [SerenatasModule ,TypeOrmModule.forFeature([UserEntity, ResponsibleOfEntity, SerenataEntity])],
+  controllers: [UsersController, ResponsibleOfController, SerenatasController],
+  providers: [UsersService, ResponsibleOfService, SerenatasService]
 })
 export class UsersModule {}

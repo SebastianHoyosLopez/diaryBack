@@ -5,9 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 
 import { UserEntity } from './user.entity';
+import { SerenataEntity } from 'src/serenatas/entities/serenata.entity';
 
 @Entity()
 export class ResponsibleOfEntity {
@@ -35,7 +37,9 @@ export class ResponsibleOfEntity {
   })
   updateAt: Date;
 
-  @OneToOne(() => UserEntity, (user) => user.responsibleOf, 
-  { nullable: true })
+  @OneToOne(() => UserEntity, (user) => user.responsibleOf, { nullable: true })
   user: UserEntity;
+
+  @OneToMany(() => SerenataEntity, (serenata) => serenata.responsibleOf)
+  serenatas: SerenataEntity[];
 }

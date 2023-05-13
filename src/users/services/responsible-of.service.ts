@@ -12,13 +12,19 @@ export class ResponsibleOfService {
   ) {}
 
   async findAll() {
-    return await this.responsibleOfRepo.find();
+    const currentDate = new Date();
+    return await this.responsibleOfRepo
+      .createQueryBuilder('responsibleOf')
+      .leftJoinAndSelect('responsibleOf.serenatas', 'serenatas')
+      .where('serenatas.date >= :currentDate', { currentDate: currentDate.toISOString().split('T')[0] })
+      .orderBy('serenatas.date', 'ASC')
+      .getMany()
+
   }
 
   async findOne(id: number) {
     const responsibleOf = await this.responsibleOfRepo
       .createQueryBuilder('responsibleOf')
-      //   .leftJoinAndSelect('customer.serenatas', 'serenata')
       .where('responsibleOf.id = :id', { id })
       .getOne();
 

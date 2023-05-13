@@ -9,12 +9,12 @@ import { UsersModule } from './users/users.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
+      host: process.env.TYPEORM_HOST,
+      port: parseInt(process.env.TYPEORM_PORT),
       username: 'Mariachibd',
       password: 'Mariachibd2023',
       database: 'diarybdMariachi',
-      entities: [__dirname + `src/**/*.entity.ts`],
+      entities: [__dirname + process.env.TYPEORM_ENTITIES],
       synchronize: true,
       autoLoadEntities: true,
     }),
