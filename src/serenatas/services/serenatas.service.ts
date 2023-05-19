@@ -1,10 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SerenataEntity } from '../entities/serenata.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, LessThanOrEqual, MoreThan, Repository } from 'typeorm';
+import {
+  FindManyOptions,
+  FindOneOptions,
+  LessThanOrEqual,
+  MoreThan,
+  Repository,
+} from 'typeorm';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
-import { SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
+import {
+  SerenataDto,
+  UpdateSerenataDto,
+  FilterSerenatasDto,
+} from '../dtos/serenata.dtos';
 import { ResponsibleOfService } from 'src/users/services/responsible-of.service';
 
 @Injectable()
@@ -15,26 +25,56 @@ export class SerenatasService {
     private readonly responsibleOfService: ResponsibleOfService,
   ) {}
 
-  async findAll(): Promise<SerenataEntity[]> {
+  async findAll(params?: FilterSerenatasDto): Promise<SerenataEntity[]> {
+    // const findOptions: FindManyOptions<SerenataEntity> = {
+    //   relations: ['responsibleOf'],
+    //   order: { date: 'ASC', hour: 'ASC' },
+    // };
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
     yesterday.setDate(currentDate.getDate() - 1);
 
-    return await this.serenataRepo
+    if (params) {
+      const { limit, offset } = params;
+      return this.serenataRepo.find({
+        relations: ['responsibleOf'],
+        order: { date: 'ASC', hour: 'ASC' },
+        where: {
+          date: MoreThan(yesterday.toISOString()),
+        },
+        take: limit,
+        skip: offset,
+      });
+    }
+    const query = this.serenataRepo
       .createQueryBuilder('serenata')
       .leftJoinAndSelect('serenata.responsibleOf', 'responsibleOf')
       .where({
         date: MoreThan(yesterday.toISOString()),
       })
       .orderBy('date', 'ASC')
-      .addOrderBy('hour', 'ASC')
-      .getMany();
+      .addOrderBy('hour', 'ASC');
+
+    return await query.getMany();
   }
 
-  async findRecord() {
+  async findRecord(params?: FilterSerenatasDto) {
     const currentDate = new Date();
     const yesterday = new Date(currentDate);
     yesterday.setDate(currentDate.getDate() - 1);
+
+    if (params) {
+      const { limit, offset } = params;
+      return this.serenataRepo.find({
+        relations: ['responsibleOf'],
+        order: { date: 'DESC', hour: 'DESC' },
+        where: {
+          date: LessThanOrEqual(yesterday.toISOString()),
+        },
+        take: limit,
+        skip: offset,
+      }); 
+    }
 
     return await this.serenataRepo
       .createQueryBuilder('serenatas')

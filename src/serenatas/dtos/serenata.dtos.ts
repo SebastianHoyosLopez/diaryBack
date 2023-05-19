@@ -1,5 +1,12 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class SerenataDto {
   @IsString()
@@ -22,3 +29,14 @@ export class SerenataDto {
 }
 
 export class UpdateSerenataDto extends PartialType(SerenataDto) {}
+
+export class FilterSerenatasDto {
+  
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @IsOptional()
+  @Min(0)
+  offset: number;
+}

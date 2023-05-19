@@ -6,9 +6,10 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { SerenatasService } from '../services/serenatas.service';
-import { SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
+import { FilterSerenatasDto, SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
 import { IResponse } from 'src/utils/interFaces';
 
 @Controller('serenatas')
@@ -16,13 +17,17 @@ export class SerenatasController {
   constructor(private serenatasService: SerenatasService) {}
 
   @Get()
-  async getSerenatas() {
-    return await this.serenatasService.findAll();
+  async getSerenatas(
+    @Query() params: FilterSerenatasDto
+  ) {
+    return await this.serenatasService.findAll(params);
   }
 
   @Get('history')
-  async getRecordSerenatas() {
-    return await this.serenatasService.findRecord();
+  async getRecordSerenatas(
+    @Query() params: FilterSerenatasDto
+  ) {
+    return await this.serenatasService.findRecord(params);
   }
 
   @Get(':id')
