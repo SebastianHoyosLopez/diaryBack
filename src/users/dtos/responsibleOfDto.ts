@@ -10,7 +10,7 @@ export class ResponsibleOfDto {
   @IsNotEmpty()
   readonly lastname: string;
 
-  @IsPhoneNumber()
+  // @IsPhoneNumber()
   @IsNotEmpty()
   readonly phone: string;
 }

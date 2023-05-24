@@ -21,7 +21,6 @@ export class UserDto {
 
   @IsOptional()
   @IsPositive()
-  @IsNotEmpty()
   readonly responsibleOfId: number;
 }
 

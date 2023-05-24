@@ -9,13 +9,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ResponsibleOfEntity } from './responsibleOf.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'varchar', length: 250 })
   email: string;
 
   @Column({ type: 'varchar', length: 255 })
@@ -24,15 +25,18 @@ export class UserEntity {
   @Column({ type: 'varchar', length: 100 })
   role: string;
 
+  @Exclude()
   @DeleteDateColumn()
   deletedAt?: Date;
 
+  @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
@@ -42,6 +46,8 @@ export class UserEntity {
   @OneToOne(() => ResponsibleOfEntity, (responsibleOf) => responsibleOf.user, {
     nullable: true
   })
-  @JoinColumn()
+  @JoinColumn({
+    name: 'responsible_of'
+  })
   responsibleOf: ResponsibleOfEntity; 
 }

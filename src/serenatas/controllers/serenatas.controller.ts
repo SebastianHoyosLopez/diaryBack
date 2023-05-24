@@ -11,6 +11,7 @@ import {
 import { SerenatasService } from '../services/serenatas.service';
 import { FilterSerenatasDto, SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
 import { IResponse } from 'src/utils/interFaces';
+import { Index } from 'typeorm';
 
 @Controller('serenatas')
 export class SerenatasController {
@@ -23,7 +24,7 @@ export class SerenatasController {
     return await this.serenatasService.findAll(params);
   }
 
-  @Get('history')
+  @Get('history') 
   async getRecordSerenatas(
     @Query() params: FilterSerenatasDto
   ) {
@@ -31,6 +32,7 @@ export class SerenatasController {
   }
 
   @Get(':id')
+  @Index()
   async getOneSerenata(@Param('id') id: string) {
     return await this.serenatasService.findOneSerenata(id);
   }

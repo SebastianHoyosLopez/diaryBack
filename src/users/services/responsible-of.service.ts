@@ -13,13 +13,13 @@ export class ResponsibleOfService {
 
   async findAll() {
     const currentDate = new Date();
-    return await this.responsibleOfRepo
-      .createQueryBuilder('responsibleOf')
-      .leftJoinAndSelect('responsibleOf.serenatas', 'serenatas')
-      .where('serenatas.date >= :currentDate', { currentDate: currentDate.toISOString().split('T')[0] })
-      .orderBy('serenatas.date', 'ASC')
-      .getMany()
-
+    const results = await this.responsibleOfRepo
+    .createQueryBuilder('responsibleOf')
+    .leftJoinAndSelect('responsibleOf.serenatas', 'serenatas')
+    // .where('serenatas.date >= :currentDate', { currentDate: currentDate.toISOString().split('T')[0] })
+    .orderBy('serenatas.date', 'ASC')
+    .getMany()
+    return results;
   }
 
   async findOne(id: number) {
@@ -29,17 +29,17 @@ export class ResponsibleOfService {
       .getOne();
 
     if (!responsibleOf) {
-      throw new NotFoundException(`Customer #${id} not found`);
+      throw new NotFoundException(`ResponsibleOf #${id} not found`);
     }
     return responsibleOf;
   }
 
   async create(data: ResponsibleOfDto) {
-    const newCustomer = await this.responsibleOfRepo.create(data);
-    return this.responsibleOfRepo.save(newCustomer);
+    const newResponsibleOf = await this.responsibleOfRepo.create(data);
+    return this.responsibleOfRepo.save(newResponsibleOf);
   }
 
-  async update(id: number, changes: UpdateResponsibleOfDto) {
+  async update(id: number, changes: UpdateResponsibleOfDto): Promise<UpdateResponsibleOfDto> {
     const responsibleOf = await this.findOne(id);
     this.responsibleOfRepo.merge(responsibleOf, changes);
     return this.responsibleOfRepo.save(responsibleOf);

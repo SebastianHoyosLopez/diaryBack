@@ -129,9 +129,7 @@ export class SerenatasService {
       throw new HttpException('SERENATA_EXISTS', HttpStatus.CONFLICT);
     }
 
-    const newSerenata = this.serenataRepo.create({
-      ...data,
-    });
+    const newSerenata = this.serenataRepo.create(data);
 
     if (data.responsibleOfId) {
       const responsibleOf = await this.responsibleOfService.findOne(

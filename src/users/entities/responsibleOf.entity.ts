@@ -7,30 +7,33 @@ import {
   OneToOne,
   OneToMany,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 import { UserEntity } from './user.entity';
 import { SerenataEntity } from 'src/serenatas/entities/serenata.entity';
 
-@Entity()
+@Entity({ name: 'responsibleOf' })
 export class ResponsibleOfEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
+  @Column({ type: 'varchar', length: 230, unique: true })
   name: string;
 
   @Column({ type: 'varchar', length: 100 })
   lastname: string;
 
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ type: 'varchar', length: 40 })
   phone: string;
 
+  @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
