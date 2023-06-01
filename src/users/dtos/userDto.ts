@@ -1,5 +1,15 @@
-import { IsString, IsNotEmpty, IsEmail, Length, IsPositive, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsEmail,
+  Length,
+  IsPositive,
+  IsOptional,
+  isString,
+} from 'class-validator';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
+import { Column } from 'typeorm';
 
 export class UserDto {
   @IsString()
@@ -7,14 +17,15 @@ export class UserDto {
   @ApiProperty({ description: 'the email of user' })
   readonly email: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @Length(6)
+  // @IsString()
+  // @IsNotEmpty()
+  @Exclude()
+  @ApiProperty({ writeOnly: true })
   readonly password: string;
 
   @IsString()
   @IsNotEmpty()
-  readonly userName: string 
+  readonly userName: string;
 
   @IsNotEmpty()
   readonly role: string;

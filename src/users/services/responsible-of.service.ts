@@ -16,7 +16,7 @@ export class ResponsibleOfService {
     const results = await this.responsibleOfRepo
     .createQueryBuilder('responsibleOf')
     .leftJoinAndSelect('responsibleOf.serenatas', 'serenatas')
-    // .where('serenatas.date >= :currentDate', { currentDate: currentDate.toISOString().split('T')[0] })
+    .where('serenatas.date >= :currentDate', { currentDate: currentDate.toISOString().split('T')[0] })
     .orderBy('serenatas.date', 'ASC')
     .getMany()
     return results;
