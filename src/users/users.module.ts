@@ -12,8 +12,12 @@ import { SerenatasService } from 'src/serenatas/services/serenatas.service';
 import { SerenataEntity } from 'src/serenatas/entities/serenata.entity';
 
 @Module({
-  imports: [SerenatasModule ,TypeOrmModule.forFeature([UserEntity, ResponsibleOfEntity, SerenataEntity])],
+  imports: [
+    SerenatasModule,
+    TypeOrmModule.forFeature([UserEntity, ResponsibleOfEntity, SerenataEntity]),
+  ],
   controllers: [UsersController, ResponsibleOfController, SerenatasController],
-  providers: [UsersService, ResponsibleOfService, SerenatasService]
+  providers: [UsersService, ResponsibleOfService, SerenatasService],
+  exports: [UsersService],
 })
 export class UsersModule {}

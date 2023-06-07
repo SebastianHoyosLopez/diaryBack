@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { UserDto } from '../dtos/userDto';
 import { UpdateUserDto } from '../dtos/userDto';
@@ -21,6 +21,9 @@ export class UsersController {
 
   @Post()
   async create(@Body() payload: UserDto) {
+    if (!payload.password || typeof payload.password !== 'string') {
+      throw new BadRequestException('Password should be a non-empty string');
+    }
     return await this.usersService.create(payload)
   }
 

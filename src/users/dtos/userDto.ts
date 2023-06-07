@@ -17,9 +17,9 @@ export class UserDto {
   @ApiProperty({ description: 'the email of user' })
   readonly email: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  @Exclude()
+  // @Exclude({ toPlainOnly: true })
+  @IsString()
+  @IsNotEmpty()
   @ApiProperty({ writeOnly: true })
   readonly password: string;
 

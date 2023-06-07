@@ -45,13 +45,21 @@ export class UsersService {
     return userExist;
   }
 
+  findByEmail(email: string){
+    return this.usersRepo.findOne({where: {email}})
+  }
+
   async create(data: UserDto) {
     const newUser = this.usersRepo.create(data);
     const hashPassword = await bcrypt.hash(newUser.password, 10);
     newUser.password = hashPassword;
-    if (!data.password) {
-      throw new Error('Password should not be empty');
+
+    const userExist = await this.usersRepo.findOne({ where: {email: newUser.email}})
+
+    if (userExist) {
+      throw new HttpException('USER_EXISTS', HttpStatus.CONFLICT);
     }
+
     if (data.responsibleOfId) {
       const responsibleOf = await this.responsibleOfService.findOne(
         data.responsibleOfId,
