@@ -7,23 +7,29 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { SerenatasService } from '../services/serenatas.service';
 import { FilterSerenatasDto, SerenataDto, UpdateSerenataDto } from '../dtos/serenata.dtos';
 import { IResponse } from 'src/utils/interFaces';
 import { Index } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Public } from 'src/auth/decorators/public.decorator';
 
+// @UseGuards(JwtAuthGuard)
 @Controller('serenatas')
 export class SerenatasController {
   constructor(private serenatasService: SerenatasService) {}
 
+  @Public()
   @Get()
   async getSerenatas(
     @Query() params: FilterSerenatasDto
   ) {
     return await this.serenatasService.findAll(params);
   }
-
+  @Public()
   @Get('history') 
   async getRecordSerenatas(
     @Query() params: FilterSerenatasDto
@@ -31,6 +37,7 @@ export class SerenatasController {
     return await this.serenatasService.findRecord(params);
   }
 
+  @Public()
   @Get(':id')
   @Index()
   async getOneSerenata(@Param('id') id: string) {

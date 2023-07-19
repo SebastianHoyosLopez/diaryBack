@@ -7,5 +7,6 @@ export default registerAs('config', () => {
       port: process.env.TYPEORM_PORT,
     },
     apikey: process.env.API_KEY,
+    jwtSecret: process.env.JWT_SECRET
   };
 });

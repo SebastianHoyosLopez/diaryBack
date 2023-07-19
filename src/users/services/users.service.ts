@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { UpdateUserDto, UserDto } from '../dtos/userDto';
 import { ResponsibleOfService } from './responsible-of.service';
 import { ConfigService } from '@nestjs/config';
@@ -19,7 +19,7 @@ export class UsersService {
   async getMany(): Promise<UserEntity[]> {
     const apikey = this.configService.get('API_KEY');
     const db = this.configService.get('TYPEORM_DATABASE');
-    console.log(apikey, db);
+    // console.log(apikey, db);
     return await this.usersRepo
       .createQueryBuilder('users')
       .leftJoinAndSelect('users.responsibleOf', 'responsibleOf')
@@ -66,7 +66,6 @@ export class UsersService {
       );
       newUser.responsibleOf = responsibleOf;
     }
-
     return this.usersRepo.save(newUser);
   }
 

@@ -29,14 +29,14 @@ export class UserEntity {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Exclude()
+  // @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
-  @Exclude()
+  // @Exclude()
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
